@@ -1,0 +1,67 @@
+
+## Compilación
+bin/
+obj/
+out/
+
+## Archivos de usuario de Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Configuración local de Rider o VS Code
+.vscode/
+.idea/
+
+## Archivos de log
+*.log
+
+## Backup y archivos temporales
+*.bak
+*.tmp
+*.swp
+
+## Paquetes NuGet descargados
+**/packages/*
+!**/packages/build/
+!**/packages/repositories.config
+
+# Si usás Paket:
+.paket/
+paket-files/
+
+## Archivos de build generados
+*.dll
+*.exe
+*.app
+*.pdb
+
+## Configuración de entorno local
+.env
+
+## Publicación
+publish/
+wwwroot/
+
+## Archivos de test
+TestResults/
+*.coverage
+*.coveragexml
+
+## Archivos generados por dotnet
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## Rider
+.idea/
+
+## Resharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+## Global JetBrains
+*.sln.iml

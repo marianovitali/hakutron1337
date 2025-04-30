@@ -1,0 +1,42 @@
+﻿@model Product
+<div class="row">
+
+    <div class="col-sm-8 offset-sm-2">
+        <h2>New Product</h2>
+        <form asp-controller="Products" asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+            <div class="mb-3">
+                <label>Name</label>
+                <input class="form-control" asp-for="Name" type="text" />
+            </div>
+            <div class="mb-3">
+                <label>Description</label>
+                <input class="form-control" asp-for="Description" type="text" />
+            </div>
+            <div class="mb-3">
+                <label>Price</label>
+                <input class="form-control" asp-for="Price" type="number" />
+            </div>
+            <div class="mb-3">
+                <label>Stock</label>
+                <input class="form-control" asp-for="Stock" type="number" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="CategoryId" class="form-label"></label>
+                <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-select">
+                    <option value="">-- Select a category --</option>
+                </select>
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <button class="btn btn-primary" type="submit">Save</button>
+                <a asp-controller="Products" asp-action="Index" class="btn btn-warning">Back</a>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
