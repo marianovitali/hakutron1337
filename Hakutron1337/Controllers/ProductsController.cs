@@ -1,123 +1,61 @@
-﻿using Hakutron1337.Models;
-using Hakutron1337.Repositories;
+using Hakutron1337.Business;
+using Hakutron1337.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 
 namespace Hakutron1337.Controllers
 {
     public class ProductsController : Controller
     {
+        private readonly ProductBusiness _productBusiness;
 
-        private readonly IProductRepository _productRepository;
-
-
-        public ProductsController(IProductRepository productRepository)
+        public ProductsController(ProductBusiness productBusiness)
         {
-            _productRepository = productRepository;
+            _productBusiness = productBusiness;
         }
 
-
         [HttpGet]
-
         public async Task<IActionResult> Index()
         {
-            var products = await _productRepository.GetAllProducts();
-
+            var products = await _productBusiness.GetAllProducts();
             return View(products);
         }
 
-        //public IActionResult Index2()
-        //{
-        //    return View();
-        //}
-
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> Details(int id)
+        [HttpGet]
+        public async Task<IActionResult> Create()
         {
-            var product = await _productRepository.GetById(id);
+            ViewBag.Categories = await _productBusiness.GetCategoriesSelectList();
+            return View();
+        }
 
-            if (product is null)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Product product)
+        {
+            if (ModelState.IsValid)
+            {
+                await _productBusiness.AddProduct(product);
+                return RedirectToAction(nameof(Index));
+            }
+
+            ViewBag.Categories = await _productBusiness.GetCategoriesSelectList(product.CategoryId);
+            return View(product);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var product = await _productBusiness.GetProductById(id);
+            if (product == null)
             {
                 return NotFound();
             }
 
-            return View(product);
-        }                                                                                                                                                         
-        [HttpGet]
-        public IActionResult Create()
-        {
-            ViewBag.Categories = new SelectList(_context.Categories, "Id", "Name");
-
-            return View();
-        } 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create(Product product)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        _context.Products.Add(product);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    ViewBag.Categories = new SelectList(_context.Categories, "Id", "Name", product.CategoryId);
-        //    return View(product);
-        //}
-
-        public async Task<IActionResult> Create(Product product)
-        {
-
-            await _productRepository.Add(product);
-
-            return RedirectToAction(nameof(Index));
-
-        }
-        [HttpGet]
-        public async Task<IActionResult> Edit(int id)
-        {
-            ViewBag.Categories = new SelectList(_context.Categories, "Id", "Name");
-
-            Product product = await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
-
+            ViewBag.Categories = await _productBusiness.GetCategoriesSelectList(product.CategoryId);
             return View(product);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int id, Product product)
-        //{
-        //    if (id != product.Id)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            _context.Update(product);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!ProductExists(product.Id))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    ViewBag.Categories = new SelectList(_context.Categories, "Id", "Name", product.CategoryId);
-
-        //    return View(product);
-        //}
-
         public async Task<IActionResult> Edit(int id, Product product)
         {
             if (id != product.Id)
@@ -125,32 +63,14 @@ namespace Hakutron1337.Controllers
                 return NotFound();
             }
 
-            await _productRepository.Update(product);
-            return RedirectToAction(nameof(Index));
-        }
-
-
-
-        // POST: Products/Delete/5
-        [HttpGet]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var product = await _context.Products.FirstAsync(x => x.Id == id);
-            if (product != null)
+            if (ModelState.IsValid)
             {
-                _context.Products.Remove(product);
+                await _productBusiness.UpdateProduct(product);
+                return RedirectToAction(nameof(Index));
             }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            ViewBag.Categories = await _productBusiness.GetCategoriesSelectList(product.CategoryId);
+            return View(product);
         }
-
-
-        private bool ProductExists(int id)
-        {
-            return _context.Products.Any(e => e.Id == id);
-        }
-
     }
 }
-    
