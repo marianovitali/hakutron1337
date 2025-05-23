@@ -1,4 +1,5 @@
 ﻿
+using Hakutron1337.Business;
 using Hakutron1337.Models;
 using Hakutron1337.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>(); 
+builder.Services.AddScoped<ProductBusiness>();
 
 
 var app = builder.Build();

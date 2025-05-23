@@ -18,7 +18,6 @@ namespace Hakutron1337.Repositories
             await _context.SaveChangesAsync();
 
         }
-
         public async Task Delete(int id)
         {
             var product = await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
@@ -29,7 +28,6 @@ namespace Hakutron1337.Repositories
 
             await _context.SaveChangesAsync();
         }
-
         public async Task<IEnumerable<Product>> GetAllProducts()
         {
             var products = await _context.Products
@@ -38,7 +36,6 @@ namespace Hakutron1337.Repositories
 
             return products;
         }
-
         public async Task<Product> GetById(int id)
         {
             var product = await _context.Products
@@ -46,13 +43,11 @@ namespace Hakutron1337.Repositories
 
             return product;
         }
-
         public async Task Update(Product product)
         {
             _context.Update(product);
             await _context.SaveChangesAsync();
         }
-
         Task<List<Category>> IProductRepository.GetCategories()
         {
             throw new NotImplementedException();
